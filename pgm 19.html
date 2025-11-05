@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Registration Form</h1>
+
+<form action="" method="POST">
+    Username : <input type="text" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"><br><br>
+    Email : <input type="text" name="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"><br><br>
+    Password : <input type="password" name="pass"><br><br>
+    Confirm Password : <input type="password" name="cpass"><br><br>
+    <input type="submit" value="Register">
+</form>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $errors = []; // Initialize an array to store errors
+
+    // 1. Check empty fields
+    if (empty($_POST['username']) || empty($_POST['email']) ||
+        empty($_POST['pass']) || empty($_POST['cpass'])) {
+        $errors[] = "Please fill all required fields!";
+    }
+    
+    // 2. Check password match (only check if both password fields were potentially filled)
+    // This assumes if the first check passes, we can proceed to compare them.
+    if (!empty($_POST['pass']) && !empty($_POST['cpass']) && $_POST['pass'] != $_POST['cpass']) {
+        $errors[] = "Password and confirm password should match!";
+    }
+
+    echo "<p style='color: red;'>"; // Start outputting errors
+
+    if (count($errors) > 0) {
+        // Display all errors
+        foreach ($errors as $error) {
+            echo $error . "<br>";
+        }
+    } else {
+        // If the $errors array is empty, all validation passed
+        echo "</p>"; // Close the error styling tag before the success message
+        echo "<p style='color: green;'>**Successful!**</p>";
+        
+        // In a real application, you would insert data into the database here.
+    }
+    
+    echo "</p>"; // This closes the <p> started earlier if errors were present
+}
+?>
+</body>
+</html>
